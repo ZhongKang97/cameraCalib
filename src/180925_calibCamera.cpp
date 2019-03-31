@@ -1,15 +1,17 @@
-#include"180925_calibCamera.h"
-#define HAVE_PICTURE 1
-#define HAVE_XML 1
+#include"../include/180925_calibCamera.h"
+
 int CameraCalibrator::nCalibPictures=15;
 void CameraCalibrator::takeCalibPicture_ZED()
 {
-    VideoCapture cap(0);
+    
     int counter=0;
+    cap.open(1);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
     if(cap.isOpened())
     {
         Mat frame;
-        String path="/home/mclinrv/OpenCV_codeSources/data/calibPictures/";
+	String path="/home/nvidia/DISK/CODEing/OpenCV_codeSources/CameraCalibrate/"+cameraName+"/";
         cout<<"目录："<<path<<endl;
         while (true)
         {
@@ -44,6 +46,7 @@ void CameraCalibrator::takeCalibPicture_ZED()
                     cout<<"纪录完毕，图片存放在目录："<<path<<endl;
                 }
         }
+        cap.release();
     }
 }
 Mat CameraCalibrator::remapImage(Mat &srcImage)
@@ -63,7 +66,7 @@ Mat CameraCalibrator::remapImage(Mat &srcImage)
 }
 void CameraCalibrator::loadCalibratedata()
 {
-    String path="/home/mclinrv/OpenCV_codeSources/data/calibPictures/";
+  String path="/home/nvidia/DISK/CODEing/OpenCV_codeSources/CameraCalibrate/"+cameraName+"/";
     String filename=path+cameraName+format("_calibMatrixs.xml");
     FileStorage file;
     file.open(filename,FileStorage::READ);
@@ -84,7 +87,7 @@ void CameraCalibrator::showAndSaveCalibratedata()
     cout<<"内参矩阵："<<cameraMatrix<<endl;
     cout<<"畸变矩阵："<<distCoeffs<<endl;
     FileStorage file;
-    String path="/home/mclinrv/OpenCV_codeSources/data/calibPictures/";
+    String path="/home/nvidia/DISK/CODEing/OpenCV_codeSources/CameraCalibrate/"+cameraName+"/";
     String filename=path+cameraName+format("_calibMatrixs.xml");
     file.open(filename,FileStorage::WRITE);
     file<<"CameraMatrix"<<cameraMatrix;
@@ -97,7 +100,7 @@ void CameraCalibrator::showAndSaveCalibratedata()
 }
 void CameraCalibrator::getcalibFilelist()
 {
-    String path="/home/mclinrv/OpenCV_codeSources/data/calibPictures/";
+  String path="/home/nvidia/DISK/CODEing/OpenCV_codeSources/CameraCalibrate/"+cameraName+"/";
     for(int counter=0;counter<nCalibPictures;counter++)
     {
         const String filename=path+cameraName+format("_calibPicture_number%d.jpg",counter);
@@ -156,13 +159,15 @@ double CameraCalibrator::calibrate()
 }
 void CameraCalibrator::takeCalibPicture()
 {
-    VideoCapture cap(1);
     int counter=0;
+    cap.open(1);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
     if(cap.isOpened())
     {
         Mat frame;
 
-        String path="/home/mclinrv/OpenCV_codeSources/data/calibPictures/";
+	String path="/home/nvidia/DISK/CODEing/OpenCV_codeSources/CameraCalibrate/"+cameraName+"/";
         cout<<"目录："<<path<<endl;
         while (true)
         {
@@ -173,7 +178,7 @@ void CameraCalibrator::takeCalibPicture()
 
             bool found = findChessboardCorners(frame,boardSize,imageCorners);
             drawChessboardCorners(frame,boardSize,imageCorners,found);
-            imshow("发现的角点",frame);
+            imshow("corners",frame);
             char c=waitKey(1);
             if(c==27 || counter>=nCalibPictures) break;
             else if(c=='p' && found)
@@ -186,6 +191,7 @@ void CameraCalibrator::takeCalibPicture()
                     cout<<"纪录完毕，图片存放在目录："<<path<<endl;
                 }
         }
+        cap.release();
     }
 }
 void stereoCalibrator::initCalibdata()
@@ -233,7 +239,7 @@ void stereoCalibrator::computeCalibMap()
                             rectedRotion_left,
                             newProjectionMatrix_left,
                             calibrateImageSize,
-                            CV_32FC1,
+                            CV_32FC1,                                                                                                        
                             leftMap_1,
                             leftMap_2);//计算左相机矫正
     initUndistortRectifyMap(cameraMTX_r,

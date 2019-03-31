@@ -10,8 +10,7 @@ public:
     CameraCalibrator(String cameraname,Size boardsize=Size(11,8)):flag(0),cameraName(cameraname),
         boardSize(boardsize)
     {
-
-
+     
     }
     void takeCalibPicture();
     void takeCalibPicture_ZED();
@@ -27,7 +26,7 @@ public:
     void setCalibrateFlag(int flag){this->flag=flag;}
     void showAndSaveCalibratedata();//以xml文件格式储存标定数据，内参与畸变矩阵
     void loadCalibratedata();//读取标定数据
-    virtual Mat remapImage(Mat &srcImage);//应用标定数据消除畸变
+    Mat remapImage(Mat &srcImage);//应用标定数据消除畸变
 protected:
     vector<vector<Point3f>> objectPTS; /*世界坐标系中的点，坐标系固结在标定板上，xy分别
 与标定板的网格对齐,Z轴为标定板平面的法向量,以一个正方形为单位，第一点为（0,0,0）*/
@@ -40,6 +39,7 @@ protected:
     vector<String> filelist;//标定相机拍下的图像文件列表
     int flag;//指定标定方式的标志
     static int nCalibPictures;
+    VideoCapture cap;
 };
 class stereoCalibrator:public CameraCalibrator
 {

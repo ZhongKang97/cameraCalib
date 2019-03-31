@@ -1,4 +1,41 @@
- /*************************************测试****************************/
+#include"../include/180925_calibCamera.h"
+#define HAVE_PICTURE 1
+#define HAVE_XML 1
+/**************************************测试单目*********************/
+int main(int argc,char** argv)
+{
+  string cameraname="WideCam_F100_640x480";
+  CameraCalibrator calibrator(cameraname,Size(11,8));
+  #if !HAVE_PICTURE
+  calibrator.takeCalibPicture();
+  #endif
+  //calibrator.calibrate();
+  #if !HAVE_XML
+  calibrator.showAndSaveCalibratedata();
+  #endif
+  calibrator.loadCalibratedata();
+  
+  VideoCapture cap(1);
+  cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+  cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
+  
+  if(cap.isOpened())
+  {
+    cv::Mat frame;
+    while(1)
+    {
+      cap>>frame;
+      if(frame.empty()) break;
+      imshow("srcImage",frame);
+      Mat frame_undistort = calibrator.remapImage( frame );
+      imshow("undistort_img",frame_undistort);
+      char c= waitKey(0);
+      if(c==27) break;
+    }
+  }
+  return 0;
+}
+ /*************************************测试双目****************************/
 /*
 int main()
 {
