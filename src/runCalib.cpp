@@ -1,15 +1,20 @@
-#include"../include/180925_calibCamera.h"
-#define HAVE_PICTURE 1
-#define HAVE_XML 1
+﻿#include"../include/180925_calibCamera.h"
+#define HAVE_PICTURE 0
+#define HAVE_XML 0
+#define HAVE_CALIB 0
 /**************************************测试单目*********************/
 int main(int argc,char** argv)
 {
-  string cameraname="WideCam_F100_640x480";
+  string cameraname="C930E_640x480";
   CameraCalibrator calibrator(cameraname,Size(11,8));
+  string path = "D:/CODEing/OpenCV_codeSources/CameraCalibrate/C930E_640x480/";
+  calibrator.setPath(path);
   #if !HAVE_PICTURE
   calibrator.takeCalibPicture();
   #endif
-  //calibrator.calibrate();
+  #if !HAVE_CALIB
+  calibrator.calibrate();
+  #endif
   #if !HAVE_XML
   calibrator.showAndSaveCalibratedata();
   #endif
@@ -21,6 +26,7 @@ int main(int argc,char** argv)
   
   if(cap.isOpened())
   {
+	  cout << "cap is opened" << endl;
     cv::Mat frame;
     while(1)
     {
@@ -33,7 +39,7 @@ int main(int argc,char** argv)
       if(c==27) break;
     }
   }
-  return 0;
+  return system("pause");
 }
  /*************************************测试双目****************************/
 /*

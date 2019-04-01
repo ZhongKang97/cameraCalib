@@ -7,62 +7,64 @@ using namespace std;
 class CameraCalibrator
 {
 public:
-    CameraCalibrator(String cameraname,Size boardsize=Size(11,8)):flag(0),cameraName(cameraname),
-        boardSize(boardsize)
-    {
-     
-    }
-    void takeCalibPicture();
-    void takeCalibPicture_ZED();
-    void getcalibFilelist();
-    Mat getCameraMatrix(){return cameraMatrix;}
-    Mat getCameraDistcoeffs(){return distCoeffs;}
-    vector<vector<Point2f>> getImagePTS(){return imagePTS;}
-    vector<vector<Point3f>> getobjectPTS(){return objectPTS;}
-    Size getBoardSize(){return boardSize;}
-    Size getCalibrateImageSize(){return imageSize;}
-    int addChessboardPoints();
-    virtual double calibrate(); //æ ‡å®šï¼Œè¿”å›é‡æŠ•å½±è¯¯å·®
-    void setCalibrateFlag(int flag){this->flag=flag;}
-    void showAndSaveCalibratedata();//ä»¥xmlæ–‡ä»¶æ ¼å¼å‚¨å­˜æ ‡å®šæ•°æ®ï¼Œå†…å‚ä¸ç•¸å˜çŸ©é˜µ
-    void loadCalibratedata();//è¯»å–æ ‡å®šæ•°æ®
-    Mat remapImage(Mat &srcImage);//åº”ç”¨æ ‡å®šæ•°æ®æ¶ˆé™¤ç•¸å˜
+	CameraCalibrator(String cameraname, Size boardsize = Size(11, 8)) :flag(0), cameraName(cameraname),
+		boardSize(boardsize)
+	{
+
+	}
+	void setPath(string path) { this->path = path; }
+	void takeCalibPicture();
+	void takeCalibPicture_ZED();
+	void getcalibFilelist();
+	Mat getCameraMatrix() { return cameraMatrix; }
+	Mat getCameraDistcoeffs() { return distCoeffs; }
+	vector<vector<Point2f>> getImagePTS() { return imagePTS; }
+	vector<vector<Point3f>> getobjectPTS() { return objectPTS; }
+	Size getBoardSize() { return boardSize; }
+	Size getCalibrateImageSize() { return imageSize; }
+	int addChessboardPoints();
+	virtual double calibrate(); //±ê¶¨£¬·µ»ØÖØÍ¶Ó°Îó²î
+	void setCalibrateFlag(int flag) { this->flag = flag; }
+	void showAndSaveCalibratedata();//ÒÔxmlÎÄ¼ş¸ñÊ½´¢´æ±ê¶¨Êı¾İ£¬ÄÚ²ÎÓë»û±ä¾ØÕó
+	void loadCalibratedata();//¶ÁÈ¡±ê¶¨Êı¾İ
+	Mat remapImage(Mat &srcImage);//Ó¦ÓÃ±ê¶¨Êı¾İÏû³ı»û±ä
 protected:
-    vector<vector<Point3f>> objectPTS; /*ä¸–ç•Œåæ ‡ç³»ä¸­çš„ç‚¹ï¼Œåæ ‡ç³»å›ºç»“åœ¨æ ‡å®šæ¿ä¸Šï¼Œxyåˆ†åˆ«
-ä¸æ ‡å®šæ¿çš„ç½‘æ ¼å¯¹é½,Zè½´ä¸ºæ ‡å®šæ¿å¹³é¢çš„æ³•å‘é‡,ä»¥ä¸€ä¸ªæ­£æ–¹å½¢ä¸ºå•ä½ï¼Œç¬¬ä¸€ç‚¹ä¸ºï¼ˆ0,0,0ï¼‰*/
-    vector<vector<Point2f>> imagePTS;//å›¾åƒåæ ‡ç³»ä¸­çš„ç‚¹ï¼Œä»¥åƒç´ ä¸ºå•ä½
-    Size boardSize; //æ ‡å®šæ¿å°ºå¯¸ï¼Œå†…è§’ç‚¹ä¸ªæ•°nXm
-    Mat cameraMatrix;//ç›¸æœºå†…éƒ¨å‚æ•°çŸ©é˜µ
-    Mat distCoeffs;//ç•¸å˜çŸ©é˜µ
-    Size imageSize;//æ ‡å®šå›¾åƒçš„å°ºå¯¸å¤§å°
-    String cameraName;//æ ‡å®šç›¸æœºåç§°
-    vector<String> filelist;//æ ‡å®šç›¸æœºæ‹ä¸‹çš„å›¾åƒæ–‡ä»¶åˆ—è¡¨
-    int flag;//æŒ‡å®šæ ‡å®šæ–¹å¼çš„æ ‡å¿—
-    static int nCalibPictures;
-    VideoCapture cap;
+	vector<vector<Point3f>> objectPTS; /*ÊÀ½ç×ø±êÏµÖĞµÄµã£¬×ø±êÏµ¹Ì½áÔÚ±ê¶¨°åÉÏ£¬xy·Ö±ğ
+									   Óë±ê¶¨°åµÄÍø¸ñ¶ÔÆë,ZÖáÎª±ê¶¨°åÆ½ÃæµÄ·¨ÏòÁ¿,ÒÔÒ»¸öÕı·½ĞÎÎªµ¥Î»£¬µÚÒ»µãÎª£¨0,0,0£©*/
+	vector<vector<Point2f>> imagePTS;//Í¼Ïñ×ø±êÏµÖĞµÄµã£¬ÒÔÏñËØÎªµ¥Î»
+	Size boardSize; //±ê¶¨°å³ß´ç£¬ÄÚ½Çµã¸öÊınXm
+	Mat cameraMatrix;//Ïà»úÄÚ²¿²ÎÊı¾ØÕó
+	Mat distCoeffs;//»û±ä¾ØÕó
+	Size imageSize;//±ê¶¨Í¼ÏñµÄ³ß´ç´óĞ¡
+	String cameraName;//±ê¶¨Ïà»úÃû³Æ
+	vector<String> filelist;//±ê¶¨Ïà»úÅÄÏÂµÄÍ¼ÏñÎÄ¼şÁĞ±í
+	int flag;//Ö¸¶¨±ê¶¨·½Ê½µÄ±êÖ¾
+	static int nCalibPictures;
+	VideoCapture cap;
+	String path;
 };
-class stereoCalibrator:public CameraCalibrator
+class stereoCalibrator :public CameraCalibrator
 {
 public:
-    stereoCalibrator(String cameraname,Size boardsize=Size(11,8)):CameraCalibrator(cameraname,boardsize)
-    {}
-    void initCalibdata();//åœ¨calibrateå†…éƒ¨è°ƒç”¨
-    virtual double calibrate();//å¤šæ€å‡½æ•°,å¤ç”¨calibrateå‡½æ•°
-    void computeCalibMap();//è®¡ç®—çŸ«æ­£æ˜ å°„
-    Mat getQMatirx(){return Q;}//è¿”å›å¸¦æ·±åº¦ä¿¡æ¯çš„QçŸ©é˜µ
-    void getLeftMap(Mat &leftMap1,Mat &leftMap2){leftMap1=leftMap_1.clone();leftMap2=leftMap_2.clone();}
-    void getRightMap(Mat &rightMap1,Mat &rightMap2){rightMap1=rightMap_1.clone();rightMap2=rightMap_2.clone();}
+	stereoCalibrator(String cameraname, Size boardsize = Size(11, 8)) :CameraCalibrator(cameraname, boardsize)
+	{}
+	void initCalibdata();//ÔÚcalibrateÄÚ²¿µ÷ÓÃ
+	virtual double calibrate();//¶àÌ¬º¯Êı,¸´ÓÃcalibrateº¯Êı
+	void computeCalibMap();//¼ÆËã½ÃÕıÓ³Éä
+	Mat getQMatirx() { return Q; }//·µ»Ø´øÉî¶ÈĞÅÏ¢µÄQ¾ØÕó
+	void getLeftMap(Mat &leftMap1, Mat &leftMap2) { leftMap1 = leftMap_1.clone(); leftMap2 = leftMap_2.clone(); }
+	void getRightMap(Mat &rightMap1, Mat &rightMap2) { rightMap1 = rightMap_1.clone(); rightMap2 = rightMap_2.clone(); }
 protected:
-    vector<vector<Point2f>> leftImagePTS,rightImagePTS;
-    Mat R,T;//ä¿è¯å…‰è½´å¹³è¡Œä»¥åŠåƒå¹³é¢å…±é¢çš„æ—‹è½¬çŸ©é˜µå’Œå¹³ç§»çŸ©é˜µ
-    Mat cameraMTX_l,cameraMTX_r;
-    Mat distCoeffs_l,distCoeffs_r;
-    Size calibrateImageSize;
-    Mat leftMap_1,leftMap_2;
-    Mat rightMap_1,rightMap_2;
-    Mat newProjectionMatrix_left,newProjectionMatrix_right;//ç«‹ä½“æ ‡å®šå3x4çš„å·¦å³ç›¸æœºçŸ©é˜µ
-    Mat rectedRotion_left,rectedRotion_right; //ç«‹ä½“æ ‡å®šæ—‹è½¬çŸ©é˜µï¼Œä½¿å¾—å·¦å³åƒç´ è¡Œå¯¹é½
-    Mat Q;//å«æœ‰æ·±åº¦ä¿¡æ¯çš„çŸ©é˜µ
+	vector<vector<Point2f>> leftImagePTS, rightImagePTS;
+	Mat R, T;//±£Ö¤¹âÖáÆ½ĞĞÒÔ¼°ÏñÆ½Ãæ¹²ÃæµÄĞı×ª¾ØÕóºÍÆ½ÒÆ¾ØÕó
+	Mat cameraMTX_l, cameraMTX_r;
+	Mat distCoeffs_l, distCoeffs_r;
+	Size calibrateImageSize;
+	Mat leftMap_1, leftMap_2;
+	Mat rightMap_1, rightMap_2;
+	Mat newProjectionMatrix_left, newProjectionMatrix_right;//Á¢Ìå±ê¶¨ºó3x4µÄ×óÓÒÏà»ú¾ØÕó
+	Mat rectedRotion_left, rectedRotion_right; //Á¢Ìå±ê¶¨Ğı×ª¾ØÕó£¬Ê¹µÃ×óÓÒÏñËØĞĞ¶ÔÆë
+	Mat Q;//º¬ÓĞÉî¶ÈĞÅÏ¢µÄ¾ØÕó
 };
-#endif // 180925_ç›¸æœºæ ‡å®š_H
+#endif // 180925_Ïà»ú±ê¶¨_H
 
