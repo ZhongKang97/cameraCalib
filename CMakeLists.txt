@@ -13,6 +13,7 @@ set( LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib )
 #find_package(Boost REQUIRED COMPONENTS system filesystem  thread)
 #include_directories(${Boost_INCLUDE_DIR})
 # OpenCV
+set(OpenCV_DIR "D:/CODEing/OpenCV/OpenCV412/build")
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 #Threads

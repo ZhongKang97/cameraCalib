@@ -5,9 +5,6 @@ void CameraCalibrator::takeCalibPicture_ZED()
 {
 
 	int counter = 0;
-	cap.open(1);
-	cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
 	if (cap.isOpened())
 	{
 		Mat frame;
@@ -64,7 +61,7 @@ Mat CameraCalibrator::remapImage(Mat &srcImage)
 	return undistorted;
 }
 void CameraCalibrator::loadCalibratedata()
-{
+{ 
 	String filename = path + cameraName + format("_calibMatrixs.xml");
 	FileStorage file;
 	file.open(filename, FileStorage::READ);
@@ -112,7 +109,7 @@ int CameraCalibrator::addChessboardPoints()
 	vector<Point3f> objectCorners;
 	for (int i = 0; i<boardSize.height; i++)
 		for (int j = 0; j<boardSize.width; j++)
-			objectCorners.push_back(Point3f(i * 150, j * 150, 0.0f)); /*场景中的三维点，初始化棋盘中的角点
+			objectCorners.push_back(Point3f(i * 15, j * 15, 0.0f)); /*场景中的三维点，初始化棋盘中的角点
 																	  这里我用的标定板每一个小矩形边长为15mm，故这里设置了现实世界的距离单位为mm*/
 	Mat calibImage; //用于储存棋盘图像
 	int counter = 0;
@@ -156,9 +153,6 @@ double CameraCalibrator::calibrate()
 void CameraCalibrator::takeCalibPicture()
 {
 	int counter = 0;
-	cap.open(1);
-	cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
 	if (cap.isOpened())
 	{
 		Mat frame;
@@ -186,6 +180,36 @@ void CameraCalibrator::takeCalibPicture()
 				}
 		}
 		cap.release();
+	}
+}
+void  CameraCalibrator::getCalibPictureFromDir()
+{
+	int index = 1;
+	int counter = 0;
+	while (true)
+	{
+		
+ 		String filename = path + format("calib_%d.bmp", index++);
+		Mat frame = imread(filename);
+		Mat tempImage = frame.clone();
+		Mat temp ;
+		resize(frame, temp, Size(800, 600));
+		imshow("now the frame is", temp);
+		vector<Point2f> imageCorners;
+		bool found = findChessboardCorners(frame, boardSize, imageCorners);
+		drawChessboardCorners(frame, boardSize, imageCorners, found);
+		resize(frame, temp, Size(800, 600));
+		imshow("corners", temp);
+		if (found == true)
+		{
+			cout << "正在纪录第" << counter << "张标定图" << endl;
+			const String filename = path + cameraName + format("_calibPicture_number%d.jpg", counter++);
+			cout << "FIELNAEM：" << filename << endl;
+			imwrite(filename, tempImage);
+			cout << "纪录完毕，图片存放在目录：" << path << endl;
+		}
+		if (counter >= nCalibPictures) break;
+		waitKey(0);
 	}
 }
 void stereoCalibrator::initCalibdata()

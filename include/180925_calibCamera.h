@@ -12,10 +12,16 @@ public:
 	{
 
 	}
+	void setCamera(int index=0,int img_width=640,int img_height=480) { 
+		cap.open(index);
+		cap.set(cv::CAP_PROP_FRAME_WIDTH, img_width);
+		cap.set(cv::CAP_PROP_FRAME_HEIGHT, img_height);
+	}
 	void setPath(string path) { this->path = path; }
 	void takeCalibPicture();
 	void takeCalibPicture_ZED();
 	void getcalibFilelist();
+	void getCalibPictureFromDir();
 	Mat getCameraMatrix() { return cameraMatrix; }
 	Mat getCameraDistcoeffs() { return distCoeffs; }
 	vector<vector<Point2f>> getImagePTS() { return imagePTS; }
